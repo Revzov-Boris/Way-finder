@@ -9,6 +9,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Builder
 @Schema(description = "Информация о пункте, где есть остановки транспорта")
 public class CityResponse extends RepresentationModel<CityResponse> {
+    @Schema(description = "ID населённого пункта")
     private final Integer id;
     @Schema(description = "Название города")
     private final String name;

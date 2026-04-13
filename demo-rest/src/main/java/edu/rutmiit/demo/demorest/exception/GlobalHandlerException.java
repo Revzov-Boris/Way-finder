@@ -8,7 +8,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +29,7 @@ public class GlobalHandlerException {
                 .collect(Collectors.toList());
 
         ErrorResponse error = ErrorResponse.builder()
+                .type("Ошибка валидации")
                 .timestamp(Instant.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .detail("Validation Failed")

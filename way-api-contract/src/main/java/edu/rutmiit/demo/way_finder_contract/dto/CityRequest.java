@@ -13,7 +13,7 @@ import lombok.*;
 @Setter
 @Builder
 public class CityRequest {
-    @Schema(description = "Название города")
+    @Schema(description = "Название населённого пункта", example = "Керчь")
     @NotBlank(message = "Название должно быть")
     @Size(min = 3, max = 100, message = "Название должно быть от 3 до 100 символов включительно")
     private String name;

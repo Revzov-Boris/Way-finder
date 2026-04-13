@@ -11,12 +11,10 @@ import java.util.List;
 @Builder
 @Schema(description = "Информация о маршруте")
 public class RouteResponse extends RepresentationModel<RouteResponse> {
+    @Schema(description = "ID маршрута")
     private final Long id;
     @Schema(description = "Вид транспорта, на котором происходит передвижение", example = "Автобус")
     private String type;
     @Schema(description = "Остановки в порядке следования от начальной к конечной")
     private final List<HaltResponse> halts;
-
-
-
 }
