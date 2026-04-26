@@ -7,6 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface HaltService {
     Page<HaltResponse> findAll(Pageable pageable);
-    HaltResponse findById(int id);
-    HaltResponse create(HaltRequest cityRequest);
+    HaltResponse findById(long id);
+    HaltResponse create(HaltRequest haltRequest);
 }

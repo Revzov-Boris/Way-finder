@@ -7,6 +7,8 @@ import edu.rutmiit.demo.way_finder_contract.dto.PutRouteRequest;
 import edu.rutmiit.demo.way_finder_contract.dto.RouteRequest;
 import edu.rutmiit.demo.way_finder_contract.dto.RouteResponse;
 import edu.rutmiit.demo.way_finder_contract.endpoints.RouteApi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class RouteController implements RouteApi {
+    private static final Logger log = LoggerFactory.getLogger(RouteController.class);
     private final RouteService routeService;
     private final PagedResourcesAssembler<RouteResponse> pagedRouteAssembler;
     private final RouteAssembler routeAssembler;
@@ -38,8 +41,10 @@ public class RouteController implements RouteApi {
 
     @Override
     public PagedModel<EntityModel<RouteResponse>> getAllRouts(int page, int size) {
+        System.out.println("Come");
         Pageable pageable = PageRequest.of(page, size);
         Page<RouteResponse> paged = routeService.findAll(pageable);
+        System.out.println("paged: " + paged);
         Page<RouteResponse> springPage = new PageImpl<>(
                 paged.getContent(),
                 PageRequest.of(paged.getPageable().getPageNumber(), paged.getPageable().getPageSize()),
@@ -50,6 +55,7 @@ public class RouteController implements RouteApi {
 
     @Override
     public ResponseEntity<EntityModel<RouteResponse>> createRoute(RouteRequest request) {
+        System.out.println("Дошёл до контроллера");
         RouteResponse created = routeService.create(request);
         EntityModel<RouteResponse> model = routeAssembler.toModel(created);
         return ResponseEntity

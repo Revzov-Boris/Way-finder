@@ -48,7 +48,7 @@ public class CityServiceImpl implements CityService {
     }
 
 
-    private CityResponse toResponse(CityEntity entity) {
+    public static CityResponse toResponse(CityEntity entity) {
         return CityResponse.builder()
                 .id(entity.getId())
                 .name(entity.getName())

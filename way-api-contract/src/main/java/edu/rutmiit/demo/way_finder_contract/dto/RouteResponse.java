@@ -1,10 +1,8 @@
 package edu.rutmiit.demo.way_finder_contract.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
-
 import java.util.List;
 
 @Getter

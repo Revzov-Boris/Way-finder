@@ -31,12 +31,12 @@ public interface HaltApi {
     EntityModel<HaltResponse> getHaltById(
             @Parameter(description = "ID города", required = true, example = "1")
             @PathVariable
-            Integer id
+            Long id
     );
 
 
     @Operation(
-            summary = "Список всех городов",
+            summary = "Список всех остановок",
             security = @SecurityRequirement(name = WaysApiContractConfig.SECURITY_SCHEME_BEARER)
     )
     @ApiResponse(responseCode = "200", description = "Список остановок")
@@ -48,7 +48,7 @@ public interface HaltApi {
 
 
     @Operation(
-            summary = "Создать город",
+            summary = "Создать остановку",
             security = @SecurityRequirement(name = WaysApiContractConfig.SECURITY_SCHEME_BEARER)
     )
     @ApiResponse(responseCode = "201", description = "Остановка создана")
