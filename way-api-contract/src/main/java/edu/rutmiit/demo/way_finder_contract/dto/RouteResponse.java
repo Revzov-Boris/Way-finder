@@ -5,14 +5,20 @@ import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 import java.util.List;
 
+@NoArgsConstructor(force = true)
+@AllArgsConstructor
 @Getter
+@Setter
+@ToString
 @Builder
 @Schema(description = "Информация о маршруте")
 public class RouteResponse extends RepresentationModel<RouteResponse> {
     @Schema(description = "ID маршрута")
-    private final Long id;
+    private Long id;
     @Schema(description = "Вид транспорта, на котором происходит передвижение", example = "Автобус")
-    private String type;
+    private String typeTransport;
+    @Schema(description = "Тип маршрута", example = "междугородний")
+    private String typeDistance;
     @Schema(description = "Остановки в порядке следования от начальной к конечной")
-    private final List<HaltResponse> halts;
+    private List<HaltResponse> halts;
 }

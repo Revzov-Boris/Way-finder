@@ -65,16 +65,16 @@ public class RouteController implements RouteApi {
 
     @Override
     public EntityModel<RouteResponse> patchRoute(Long id, PatchRouteRequest request) {
-        return null;
+        return routeAssembler.toModel(routeService.patch(request, id));
     }
 
     @Override
     public EntityModel<RouteResponse> putRoute(Long id, PutRouteRequest request) {
-        return null;
+        return routeAssembler.toModel(routeService.put(request, id));
     }
 
     @Override
     public EntityModel<RouteResponse> deleteRoute(Long id) {
-        return null;
+        return routeAssembler.toModel(routeService.delete(id));
     }
 }
