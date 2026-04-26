@@ -5,8 +5,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.3</version>
-        <relativePath/> 
+        <version>4.0.0</version>
+        <relativePath/>
     </parent>
     <groupId>edu.rutmiit.demo</groupId>
     <artifactId>demo-rest</artifactId>
@@ -34,8 +34,27 @@
         <protobuf-plugin.version>0.6.1</protobuf-plugin.version>
         <grpc.version>1.66.0</grpc.version>
     </properties>
-   
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Netflix DGS — BOM для управления версиями всех GraphQL-зависимостей -->
+            <dependency>
+                <groupId>com.netflix.graphql.dgs</groupId>
+                <artifactId>graphql-dgs-platform-dependencies</artifactId>
+                <version>11.1.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -44,7 +63,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>       
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-hateoas</artifactId>
@@ -67,18 +86,36 @@
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
             <version>3.1.1</version>
-        </dependency>        
+        </dependency>
 
         <dependency>
             <groupId>edu.rutmiit.demo</groupId>
-            <artifactId>books-api-contract</artifactId>
+            <artifactId>way-api-contract</artifactId>
             <version>1.0</version>
         </dependency>
-       
+
         <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
-        </dependency>        
+        </dependency>
+
+        <!-- Netflix DGS — стартер для GraphQL на базе Spring for GraphQL -->
+        <dependency>
+            <groupId>com.netflix.graphql.dgs</groupId>
+            <artifactId>graphql-dgs-spring-graphql-starter</artifactId>
+        </dependency>
+
+        <!-- Расширенные скаляры GraphQL (DateTime, Date и другие) -->
+        <dependency>
+            <groupId>com.netflix.graphql.dgs</groupId>
+            <artifactId>graphql-dgs-extended-scalars</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
 
     </dependencies>
     <build>
@@ -89,7 +126,7 @@
                 <version>1.7.1</version>
             </extension>
         </extensions>
-        <plugins>            
+        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
