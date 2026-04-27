@@ -6,9 +6,9 @@ scalar Date
 # ---------------------------------------------------------------------------
 type City {
     id: ID!
-    title: String
+    name: String
     address: String
-    timezone: Int
+    timeZone: Int
 }
 
 type Route {
@@ -20,7 +20,7 @@ type Route {
 
 type Halt {
     id: ID!
-    dateTime: DateTime
+    date: DateTime
     city: City!
     route: Route!
 }
