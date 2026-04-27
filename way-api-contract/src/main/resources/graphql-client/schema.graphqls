@@ -1,56 +1,90 @@
-type Author {
-    id: ID!
-    firstName: String
-    lastName: String
-}
+scalar DateTime
+scalar Date
 
-type Book {
+# ---------------------------------------------------------------------------
+# Сущности
+# ---------------------------------------------------------------------------
+type City {
     id: ID!
     title: String
-    isbn: String
-    createdAt: String
-    author: Author
+    address: String
+    timezone: Int
 }
 
-type BookPage {
-    content: [Book]
-    pageNumber: Int
-    pageSize: Int
-    totalElements: Int
-    totalPages: Int
-    last: Boolean
+type Route {
+    id: ID!
+    typeTransport: String
+    typeDistance: String
+    halts(page: Int = 0, size: Int = 10): HaltPage!
 }
+
+type Halt {
+    id: ID!
+    dateTime: DateTime
+    city: City!
+    route: Route!
+}
+
+
+# ---------------------------------------------------------------------------
+# Страницы
+# ---------------------------------------------------------------------------
+type CityPage {
+    content: [City!]!
+    pageInfo: PageInfo!
+    totalElements: Int!
+}
+
+type RoutePage {
+    content: [Route!]!
+    pageInfo: PageInfo!
+    totalElements: Int!
+}
+
+type HaltPage {
+    content: [Halt!]!
+    pageInfo: PageInfo!
+    totalElements: Int!
+}
+
+type PageInfo {
+    pageNumber: Int!
+    pageSize: Int!
+    totalPages: Int!
+    last: Boolean!
+}
+
+
+# ---------------------------------------------------------------------------
+# Входные типы для мутаций
+# ---------------------------------------------------------------------------
+
+input CreateCityInput {
+    title: String!
+    address: String!
+    timeZone: Int!
+}
+
+
+# ---------------------------------------------------------------------------
+# Корневые точки входа: запросы и мутации
+# ---------------------------------------------------------------------------
 
 type Query {
-    authors: [Author]
-    authorById(id: ID!): Author
+    city(id: ID!): City
 
-    books(authorId: ID, page: Int = 0, size: Int = 10): BookPage
-    bookById(id: ID!): Book
+    cities(page: Int = 0, size: Int = 10): CityPage!
+
+    halt(id: ID!): Halt
+
+    halts(page: Int = 0, size: Int = 10): HaltPage!
+
+    route(id: ID!): Route
+
+    routes(page: Int = 0, size: Int = 10): RoutePage!
 }
 
-input AuthorInput {
-    firstName: String!
-    lastName: String!
-}
-
-input BookInput {
-    title: String!
-    isbn: String!
-    authorId: ID!
-}
-
-input UpdateBookInput {
-    title: String!
-    isbn: String!
-}
 
 type Mutation {
-    createAuthor(input: AuthorInput!): Author
-    updateAuthor(id: ID!, input: AuthorInput!): Author
-    deleteAuthor(id: ID!): ID
-
-    createBook(input: BookInput!): Book
-    updateBook(id: ID!, input: UpdateBookInput!): Book
-    deleteBook(id: ID!): ID
+    _empty: String
 }

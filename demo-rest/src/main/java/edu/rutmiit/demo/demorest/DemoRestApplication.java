@@ -6,7 +6,7 @@ import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 
 @SpringBootApplication(
-        scanBasePackages = {"edu.rutmiit.demo.demorest", "edu.rutmiit.demo.way_finder_contract"}
+        scanBasePackages = {"edu.rutmiit.demo.demorest", "edu.rutmiit.demo.way_finder_contract", "edu.rutmiit.demo.events"}
 )
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
 public class DemoRestApplication {

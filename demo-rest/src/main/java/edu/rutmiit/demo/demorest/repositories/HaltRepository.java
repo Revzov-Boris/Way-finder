@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HaltRepository extends JpaRepository<HaltEntity, Long> {
     Page<HaltEntity> findAll(Pageable pageable);
+    Page<HaltEntity> findByRouteId(Long routeId, Pageable pageable);
 }
