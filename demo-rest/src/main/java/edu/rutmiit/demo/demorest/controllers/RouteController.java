@@ -7,6 +7,8 @@ import edu.rutmiit.demo.way_finder_contract.dto.PutRouteRequest;
 import edu.rutmiit.demo.way_finder_contract.dto.RouteRequest;
 import edu.rutmiit.demo.way_finder_contract.dto.RouteResponse;
 import edu.rutmiit.demo.way_finder_contract.endpoints.RouteApi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class RouteController implements RouteApi {
+    private static final Logger log = LoggerFactory.getLogger(RouteController.class);
     private final RouteService routeService;
     private final PagedResourcesAssembler<RouteResponse> pagedRouteAssembler;
     private final RouteAssembler routeAssembler;
@@ -59,16 +62,16 @@ public class RouteController implements RouteApi {
 
     @Override
     public EntityModel<RouteResponse> patchRoute(Long id, PatchRouteRequest request) {
-        return null;
+        return routeAssembler.toModel(routeService.patch(request, id));
     }
 
     @Override
     public EntityModel<RouteResponse> putRoute(Long id, PutRouteRequest request) {
-        return null;
+        return routeAssembler.toModel(routeService.put(request, id));
     }
 
     @Override
     public EntityModel<RouteResponse> deleteRoute(Long id) {
-        return null;
+        return routeAssembler.toModel(routeService.delete(id));
     }
 }

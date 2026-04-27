@@ -11,12 +11,14 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
+@ToString
 @Table(name = "routs")
 public class RouteEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String type;
+    private String typeTransport;
+    private String typeDistance;
     @OneToMany(mappedBy = "route")
     private List<HaltEntity> halts;
 }

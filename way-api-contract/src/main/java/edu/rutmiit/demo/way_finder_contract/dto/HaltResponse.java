@@ -12,8 +12,10 @@ import java.time.LocalDateTime;
 public class HaltResponse extends RepresentationModel<HaltResponse> {
     @Schema(description = "ID остановки")
     private final long id;
-    @Schema(description = "Пункт, в котором происходит остановка")
-    private final CityResponse city;
+    @Schema(description = "ID пункта, в котором происходит остановка")
+    private final Integer cityId;
+    @Schema(description = "ID маршрута")
+    private final Long routeId;
     @Schema(description = "Время (UTC+3) остановки в этом месте")
     private final LocalDateTime date;
 }

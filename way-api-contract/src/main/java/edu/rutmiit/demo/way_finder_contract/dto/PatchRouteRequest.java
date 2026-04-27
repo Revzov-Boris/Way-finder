@@ -1,10 +1,17 @@
 package edu.rutmiit.demo.way_finder_contract.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.List;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@Getter
 public class PatchRouteRequest {
-        Long id;
-        @Schema(description = "Остановки в порядке следования от начальной к конечной")
-        List<HaltRequest> halts;
+        @Schema(description = "Вид транспорта, на котором происходит передвижение", example = "Автобус")
+        @Size(min = 2, max = 50, message = "Тип должен содержать от 2 до 50 символов включительно")
+        private String typeTransport;
+        @Size(min = 2, max = 50, message = "Тип маршрута должен содержать от 2 до 50 символов включительно")
+        @Schema(description = "Тип маршрута", example = "междугородний")
+        private String typeDistance;
 }
