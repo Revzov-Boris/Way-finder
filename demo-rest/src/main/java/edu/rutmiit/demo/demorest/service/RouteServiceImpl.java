@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -25,7 +23,6 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public Page<RouteResponse> findAll(Pageable pageable) {
-        System.out.println("SERVICE");
         return routeRepository.findAll(pageable).map(e -> toResponse(e));
     }
 

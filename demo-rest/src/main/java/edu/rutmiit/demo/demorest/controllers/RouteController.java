@@ -41,10 +41,8 @@ public class RouteController implements RouteApi {
 
     @Override
     public PagedModel<EntityModel<RouteResponse>> getAllRouts(int page, int size) {
-        System.out.println("Come");
         Pageable pageable = PageRequest.of(page, size);
         Page<RouteResponse> paged = routeService.findAll(pageable);
-        System.out.println("paged: " + paged);
         Page<RouteResponse> springPage = new PageImpl<>(
                 paged.getContent(),
                 PageRequest.of(paged.getPageable().getPageNumber(), paged.getPageable().getPageSize()),
@@ -55,7 +53,6 @@ public class RouteController implements RouteApi {
 
     @Override
     public ResponseEntity<EntityModel<RouteResponse>> createRoute(RouteRequest request) {
-        System.out.println("Дошёл до контроллера");
         RouteResponse created = routeService.create(request);
         EntityModel<RouteResponse> model = routeAssembler.toModel(created);
         return ResponseEntity

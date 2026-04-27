@@ -1,6 +1,5 @@
 package edu.rutmiit.demo.demorest.service;
 
-import edu.rutmiit.demo.demorest.controllers.RouteController;
 import edu.rutmiit.demo.demorest.entities.CityEntity;
 import edu.rutmiit.demo.demorest.entities.HaltEntity;
 import edu.rutmiit.demo.demorest.entities.RouteEntity;
@@ -12,8 +11,6 @@ import edu.rutmiit.demo.way_finder_contract.dto.HaltResponse;
 import edu.rutmiit.demo.way_finder_contract.dto.PatchHaltRequest;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -63,16 +60,13 @@ public class HaltServiceImpl implements HaltService {
     @Override
     @Transactional
     public HaltResponse patch(PatchHaltRequest request, long id) {
-        System.out.println("ДОШЁЛ до контроллера");
         HaltEntity entity = getEntity(id);
-        System.out.println("ПОЛУЧИЛ enitity HALT");
         CityEntity cityEntity = null;
         if (request.getCityId() != null) {
             cityEntity = cityRepository.findById(request.getCityId()).orElseThrow(
                     () -> new EntityNotFoundException("Не найден город с ID=" + request.getCityId())
             );
         }
-        System.out.println("ПОЛУЧИЛ 1");
         RouteEntity routeEntity = null;
         if (request.getRouteId() != null) {
             routeEntity = routeRepository.findById(request.getRouteId()).orElseThrow(

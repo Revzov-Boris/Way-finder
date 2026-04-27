@@ -1,6 +1,5 @@
 package edu.rutmiit.demo.demorest.controllers;
 
-import edu.rutmiit.demo.demorest.assemblers.CityAssembler;
 import edu.rutmiit.demo.demorest.assemblers.HaltAssembler;
 import edu.rutmiit.demo.demorest.service.HaltService;
 import edu.rutmiit.demo.way_finder_contract.dto.*;
@@ -39,8 +38,6 @@ public class HaltController implements HaltApi {
     public PagedModel<EntityModel<HaltResponse>> getAllHalts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<HaltResponse> paged = haltService.findAll(pageable);
-        System.err.println("paged = " + paged);
-        System.err.println("FFFFFFFFFFFFFFFFF");
         Page<HaltResponse> springPage = new PageImpl<>(
                 paged.getContent(),
                 PageRequest.of(paged.getPageable().getPageNumber(), paged.getPageable().getPageSize()),
