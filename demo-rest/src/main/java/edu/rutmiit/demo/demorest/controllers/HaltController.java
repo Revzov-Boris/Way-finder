@@ -3,9 +3,7 @@ package edu.rutmiit.demo.demorest.controllers;
 import edu.rutmiit.demo.demorest.assemblers.CityAssembler;
 import edu.rutmiit.demo.demorest.assemblers.HaltAssembler;
 import edu.rutmiit.demo.demorest.service.HaltService;
-import edu.rutmiit.demo.way_finder_contract.dto.CityResponse;
-import edu.rutmiit.demo.way_finder_contract.dto.HaltRequest;
-import edu.rutmiit.demo.way_finder_contract.dto.HaltResponse;
+import edu.rutmiit.demo.way_finder_contract.dto.*;
 import edu.rutmiit.demo.way_finder_contract.endpoints.HaltApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +36,8 @@ public class HaltController implements HaltApi {
     }
 
     @Override
-    public PagedModel<EntityModel<HaltResponse>> getAllCities(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);;
+    public PagedModel<EntityModel<HaltResponse>> getAllHalts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
         Page<HaltResponse> paged = haltService.findAll(pageable);
         System.err.println("paged = " + paged);
         System.err.println("FFFFFFFFFFFFFFFFF");
@@ -58,5 +56,11 @@ public class HaltController implements HaltApi {
         return ResponseEntity
                 .created(model.getRequiredLink("self").toUri())
                 .body(model);
+    }
+
+
+    @Override
+    public EntityModel<HaltResponse> patchHalt(PatchHaltRequest request, long id) {
+        return haltAssembler.toModel(haltService.patch(request, id));
     }
 }

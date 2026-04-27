@@ -3,6 +3,7 @@ package edu.rutmiit.demo.way_finder_contract.endpoints;
 import edu.rutmiit.demo.way_finder_contract.config.WaysApiContractConfig;
 import edu.rutmiit.demo.way_finder_contract.dto.HaltRequest;
 import edu.rutmiit.demo.way_finder_contract.dto.HaltResponse;
+import edu.rutmiit.demo.way_finder_contract.dto.PatchHaltRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,7 +15,6 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.function.EntityResponse;
 
 @Tag(name = "Halts", description = "Управление остановками")
 @RequestMapping(
@@ -29,7 +29,7 @@ public interface HaltApi {
     @ApiResponse(responseCode = "200", description = "Остановка найден")
     @GetMapping("/{id}")
     EntityModel<HaltResponse> getHaltById(
-            @Parameter(description = "ID города", required = true, example = "1")
+            @Parameter(description = "ID остановки", required = true, example = "1")
             @PathVariable
             Long id
     );
@@ -41,7 +41,7 @@ public interface HaltApi {
     )
     @ApiResponse(responseCode = "200", description = "Список остановок")
     @GetMapping
-    PagedModel<EntityModel<HaltResponse>> getAllCities(
+    PagedModel<EntityModel<HaltResponse>> getAllHalts(
         @Parameter(description = "Номер страницы", example = "1") @RequestParam(defaultValue = "0") int page,
         @Parameter(description = "Размер страницы", example = "1") @RequestParam(defaultValue = "10") int size
     );
@@ -56,4 +56,17 @@ public interface HaltApi {
     @ApiResponse(responseCode = "409", description = "Такая остановка уже существует")
     @PostMapping
     ResponseEntity<EntityModel<HaltResponse>> createHalt(@Valid @RequestBody HaltRequest request);
+
+
+    @Operation(
+            summary = "Обновить остановку",
+            security = @SecurityRequirement(name = WaysApiContractConfig.SECURITY_SCHEME_BEARER)
+    )
+    @ApiResponse(responseCode = "200", description = "Остановка обновлена")
+    @ApiResponse(responseCode = "400", description = "Ошибка при обновлении остановки")
+    @PatchMapping("/{id}")
+    EntityModel<HaltResponse> patchHalt(@Valid @RequestBody PatchHaltRequest request,
+                                        @Parameter(description = "ID маршрута", required = true, example = "1")
+                                        @PathVariable long id);
+
 }

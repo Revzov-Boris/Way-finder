@@ -9,7 +9,9 @@ import edu.rutmiit.demo.demorest.repositories.HaltRepository;
 import edu.rutmiit.demo.demorest.repositories.RouteRepository;
 import edu.rutmiit.demo.way_finder_contract.dto.HaltRequest;
 import edu.rutmiit.demo.way_finder_contract.dto.HaltResponse;
+import edu.rutmiit.demo.way_finder_contract.dto.PatchHaltRequest;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -30,15 +32,17 @@ public class HaltServiceImpl implements HaltService {
 
     @Override
     public Page<HaltResponse> findAll(Pageable pageable) {
-        return null;
+        return haltRepository.findAll(pageable).map(e -> toResponse(e));
     }
 
     @Override
     public HaltResponse findById(long id) {
-        return null;
+        HaltEntity haltEntity = getEntity(id);
+        return toResponse(haltEntity);
     }
 
     @Override
+    @Transactional
     public HaltResponse create(HaltRequest haltRequest) {
         CityEntity cityEntity = cityRepository.findById(haltRequest.getCityId()).orElseThrow(
                 () -> new EntityNotFoundException("Не найден город с ID=" + haltRequest.getCityId())
@@ -53,6 +57,44 @@ public class HaltServiceImpl implements HaltService {
                 .build();
         entity = haltRepository.save(entity);
         return toResponse(entity);
+    }
+
+
+    @Override
+    @Transactional
+    public HaltResponse patch(PatchHaltRequest request, long id) {
+        System.out.println("ДОШЁЛ до контроллера");
+        HaltEntity entity = getEntity(id);
+        System.out.println("ПОЛУЧИЛ enitity HALT");
+        CityEntity cityEntity = null;
+        if (request.getCityId() != null) {
+            cityEntity = cityRepository.findById(request.getCityId()).orElseThrow(
+                    () -> new EntityNotFoundException("Не найден город с ID=" + request.getCityId())
+            );
+        }
+        System.out.println("ПОЛУЧИЛ 1");
+        RouteEntity routeEntity = null;
+        if (request.getRouteId() != null) {
+            routeEntity = routeRepository.findById(request.getRouteId()).orElseThrow(
+                    () -> new EntityNotFoundException("Не найден маршрут с ID=" + request.getRouteId())
+            );
+        }
+        if (routeEntity != null)
+            entity.setRoute(routeEntity);
+        if (cityEntity != null)
+            entity.setCity(cityEntity);
+        if (request.getDate() != null) {
+            entity.setTime(request.getDate());
+        }
+        entity = haltRepository.save(entity);
+        return toResponse(entity);
+    }
+
+
+    public HaltEntity getEntity(long id) {
+        return haltRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Нет остановки с ID=" + id)
+        );
     }
 
 
