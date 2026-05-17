@@ -1,0 +1,97 @@
+scalar DateTime
+scalar Date
+
+# ---------------------------------------------------------------------------
+# Сущности
+# ---------------------------------------------------------------------------
+type City {
+    id: ID!
+    name: String
+    address: String
+    timeZone: Int
+}
+
+type Route {
+    id: ID!
+    typeTransport: String
+    typeDistance: String
+    halts(page: Int = 0, size: Int = 10): HaltPage!
+}
+
+type Halt {
+    id: ID!
+    date: DateTime
+    city: City!
+    route: Route!
+}
+
+
+# ---------------------------------------------------------------------------
+# Страницы
+# ---------------------------------------------------------------------------
+type CityPage {
+    content: [City!]!
+    pageInfo: PageInfo!
+    totalElements: Int!
+}
+
+type RoutePage {
+    content: [Route!]!
+    pageInfo: PageInfo!
+    totalElements: Int!
+}
+
+type HaltPage {
+    content: [Halt!]!
+    pageInfo: PageInfo!
+    totalElements: Int!
+}
+
+type PageInfo {
+    pageNumber: Int!
+    pageSize: Int!
+    totalPages: Int!
+    last: Boolean!
+}
+
+
+# ---------------------------------------------------------------------------
+# Входные типы для мутаций
+# ---------------------------------------------------------------------------
+
+input CreateCityInput {
+    title: String!
+    address: String!
+    timeZone: Int!
+}
+
+
+# ---------------------------------------------------------------------------
+# Корневые точки входа: запросы и мутации
+# ---------------------------------------------------------------------------
+
+type Query {
+    city(id: ID!): City
+
+    cities(page: Int = 0, size: Int = 10): CityPage!
+
+    halt(id: ID!): Halt
+
+    halts(page: Int = 0, size: Int = 10): HaltPage!
+
+    route(id: ID!): Route
+
+    routes(page: Int = 0, size: Int = 10): RoutePage!
+}
+
+
+input CreateCity {
+    name: String!
+    address: String!
+    timeZone: Int!
+}
+
+
+type Mutation {
+    createCity(input: CreateCity!): City
+}

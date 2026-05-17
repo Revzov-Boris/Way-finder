@@ -92,6 +92,12 @@ public class HaltServiceImpl implements HaltService {
     }
 
 
+    @Override
+    public Page<HaltResponse> findAllByRoute(Pageable pageable, long routeId) {
+        return haltRepository.findByRouteId(routeId, pageable).map(e -> toResponse(e));
+    }
+
+
     public static HaltResponse toResponse(HaltEntity entity) {
         return HaltResponse.builder()
                 .id(entity.getId())
