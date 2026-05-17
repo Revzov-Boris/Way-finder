@@ -85,6 +85,13 @@ type Query {
 }
 
 
+input CreateCity {
+    name: String!
+    address: String!
+    timeZone: Int!
+}
+
+
 type Mutation {
-    _empty: String
+    createCity(input: CreateCity!): City
 }
