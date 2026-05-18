@@ -1,6 +1,7 @@
 package edu.rutmiit.demo.demorest.service;
 
 import edu.rutmiit.demo.demorest.entities.CityEntity;
+import edu.rutmiit.demo.demorest.events.CityEventPublisher;
 import edu.rutmiit.demo.demorest.repositories.CityRepository;
 import edu.rutmiit.demo.way_finder_contract.dto.CityRequest;
 import edu.rutmiit.demo.way_finder_contract.dto.CityResponse;
@@ -14,10 +15,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class CityServiceImpl implements CityService {
     private final CityRepository cityRepository;
+    private final CityEventPublisher eventPublisher;
 
     @Autowired
-    public CityServiceImpl(CityRepository cityRepository) {
+    public CityServiceImpl(CityRepository cityRepository, CityEventPublisher eventPublisher) {
         this.cityRepository = cityRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -44,7 +47,9 @@ public class CityServiceImpl implements CityService {
                 .address(cityRequest.getAddress())
                 .build();
         cityEntity = cityRepository.save(cityEntity);
-        return toResponse(cityEntity);
+        CityResponse response = toResponse(cityEntity);
+        eventPublisher.publishCreated(response);
+        return response;
     }
 
 

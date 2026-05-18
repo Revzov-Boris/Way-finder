@@ -4,9 +4,7 @@ public sealed interface CityEvent {
     record Created(
             Integer id,
             String name,
-            String address
+            String address,
+            Integer timeZone
     ) implements CityEvent{}
-
-
-
 }
