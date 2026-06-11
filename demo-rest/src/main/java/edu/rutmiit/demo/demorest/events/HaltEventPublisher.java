@@ -38,7 +38,7 @@ public class HaltEventPublisher {
                 halt.getRouteId(),
                 halt.getDate()
         );
-        send(RoutingKeys.HALT_CREATED, event);
+        send(RoutingKeys.HALT_PATCHUPDATED, event);
     }
 
 
