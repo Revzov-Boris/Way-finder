@@ -3,6 +3,7 @@ package edu.rutmiit.demo.demorest.service;
 import edu.rutmiit.demo.demorest.entities.CityEntity;
 import edu.rutmiit.demo.demorest.entities.HaltEntity;
 import edu.rutmiit.demo.demorest.entities.RouteEntity;
+import edu.rutmiit.demo.demorest.events.HaltEventPublisher;
 import edu.rutmiit.demo.demorest.repositories.CityRepository;
 import edu.rutmiit.demo.demorest.repositories.HaltRepository;
 import edu.rutmiit.demo.demorest.repositories.RouteRepository;
@@ -20,11 +21,13 @@ public class HaltServiceImpl implements HaltService {
     private final HaltRepository haltRepository;
     private final CityRepository cityRepository;
     private final RouteRepository routeRepository;
+    private final HaltEventPublisher eventPublisher;
 
-    public HaltServiceImpl(HaltRepository haltRepository, CityRepository cityRepository, RouteRepository routeRepository) {
+    public HaltServiceImpl(HaltRepository haltRepository, CityRepository cityRepository, RouteRepository routeRepository, HaltEventPublisher eventPublisher) {
         this.haltRepository = haltRepository;
         this.cityRepository = cityRepository;
         this.routeRepository = routeRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -53,7 +56,9 @@ public class HaltServiceImpl implements HaltService {
                 .route(routeEntity)
                 .build();
         entity = haltRepository.save(entity);
-        return toResponse(entity);
+        HaltResponse response = toResponse(entity);
+        eventPublisher.publishCreated(response);
+        return response;
     }
 
 
@@ -80,8 +85,9 @@ public class HaltServiceImpl implements HaltService {
         if (request.getDate() != null) {
             entity.setTime(request.getDate());
         }
-        entity = haltRepository.save(entity);
-        return toResponse(entity);
+        HaltResponse response = toResponse(entity);
+        eventPublisher.publishPatchupdated(response);
+        return response;
     }
 
 

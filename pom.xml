@@ -13,6 +13,8 @@
 	<modules>
 		<module>way-api-contract</module>
 		<module>demo-rest</module>
+		<module>way-events-contract</module>
+		<module>audit-service</module>
 	</modules>
 
 </project>

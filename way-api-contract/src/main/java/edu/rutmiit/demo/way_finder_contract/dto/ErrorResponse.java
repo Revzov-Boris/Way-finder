@@ -2,9 +2,7 @@ package edu.rutmiit.demo.way_finder_contract.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.time.Instant;
@@ -21,6 +19,8 @@ import java.util.List;
 @Schema(description = "Стандартный ответ об ошибке (RFC 7807 Problem Details)")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
 public class ErrorResponse extends RepresentationModel<ErrorResponse> {
 

@@ -1,6 +1,7 @@
 package edu.rutmiit.demo.demorest.service;
 
 import edu.rutmiit.demo.demorest.entities.RouteEntity;
+import edu.rutmiit.demo.demorest.events.RouteEventPublisher;
 import edu.rutmiit.demo.demorest.repositories.RouteRepository;
 import edu.rutmiit.demo.way_finder_contract.dto.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,10 +16,12 @@ import java.util.Comparator;
 @Service
 public class RouteServiceImpl implements RouteService {
     private final RouteRepository routeRepository;
+    private final RouteEventPublisher eventPublisher;
 
     @Autowired
-    public RouteServiceImpl(RouteRepository routeRepository) {
+    public RouteServiceImpl(RouteRepository routeRepository, RouteEventPublisher eventPublisher) {
         this.routeRepository = routeRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -40,7 +43,9 @@ public class RouteServiceImpl implements RouteService {
                 .typeDistance(routeRequest.getTypeDistance())
                 .build();
         routeEntity = routeRepository.save(routeEntity);
-        return toResponse(routeEntity);
+        RouteResponse response = toResponse(routeEntity);
+        eventPublisher.publishCreated(response);
+        return response;
     }
 
 
@@ -82,7 +87,9 @@ public class RouteServiceImpl implements RouteService {
             entity.setTypeTransport(request.getTypeTransport());
         }
         entity = routeRepository.save(entity);
-        return toResponse(entity);
+        RouteResponse response = toResponse(entity);
+        eventPublisher.publishPatchupdated(response);
+        return response;
     }
 
 
@@ -93,7 +100,9 @@ public class RouteServiceImpl implements RouteService {
         entity.setTypeTransport(request.getTypeTransport());
         entity.setTypeDistance(request.getTypeDistance());
         entity = routeRepository.save(entity);
-        return toResponse(entity);
+        RouteResponse response = toResponse(entity);
+        eventPublisher.publishUpdated(response);
+        return response;
     }
 
 
@@ -103,6 +112,9 @@ public class RouteServiceImpl implements RouteService {
         RouteEntity entity = getEntity(id);
         RouteResponse response = toResponse(entity);
         routeRepository.delete(entity);
+        routeRepository.flush();
+        // отправляем сообщение только если нет ошибок
+        eventPublisher.publishDeleted(response);
         return response;
     }
 }

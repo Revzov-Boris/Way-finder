@@ -1,6 +1,7 @@
 package edu.rutmiit.demo.demorest.exception;
 
 import edu.rutmiit.demo.way_finder_contract.dto.ErrorResponse;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +48,22 @@ public class GlobalHandlerException {
         ErrorResponse error = ErrorResponse.builder()
                 .timestamp(Instant.now())
                 .status(HttpStatus.BAD_REQUEST.value())
-                .detail("Validation Failed")
-                .title("Проверьте правильность введенных данных")
+                .detail(ex.getMessage())
+                .title("Произошла не определённая ошибка")
+                .instance(request.getRequestURI())
+                .build();
+        return ResponseEntity.badRequest().body(error);
+    }
+
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorResponse> entityNotFound(EntityNotFoundException ex,
+                                                               HttpServletRequest request) {
+        ErrorResponse error = ErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .detail(ex.getMessage())
+                .title("Искомый ресурс не найден")
                 .instance(request.getRequestURI())
                 .build();
         return ResponseEntity.badRequest().body(error);
