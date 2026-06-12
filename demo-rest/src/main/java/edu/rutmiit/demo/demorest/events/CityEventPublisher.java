@@ -24,7 +24,7 @@ public class CityEventPublisher {
     }
 
     /**
-     * Публикует событие «автор создан».
+     * Публикует событие «город создан».
      */
     public void publishCreated(CityResponse city) {
         var event = new CityEvent.Created(

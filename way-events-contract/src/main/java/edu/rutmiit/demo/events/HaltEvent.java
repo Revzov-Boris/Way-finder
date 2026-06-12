@@ -10,7 +10,7 @@ public sealed interface HaltEvent {
             LocalDateTime date
     ) implements HaltEvent {}
 
-    record Updated (
+    record PatchUpdated(
             Long id,
             Integer cityId,
             Long routeId,

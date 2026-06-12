@@ -32,7 +32,7 @@ public class HaltEventPublisher {
     }
 
     public void publishPatchupdated(HaltResponse halt) {
-        var event = new HaltEvent.Updated(
+        var event = new HaltEvent.PatchUpdated(
                 halt.getId(),
                 halt.getCityId(),
                 halt.getRouteId(),

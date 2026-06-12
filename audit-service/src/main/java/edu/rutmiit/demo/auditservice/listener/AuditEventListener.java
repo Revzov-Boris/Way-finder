@@ -94,8 +94,8 @@ public class AuditEventListener {
                 yield String.format("Создана остановка с ID=%s (на маршруте %s на время %s)",
                         e.id(), e.routeId(), e.date());
             }
-            case "halt.updated" -> {
-                HaltEvent.Updated e = jsonMapper.treeToValue(payloadNode, HaltEvent.Updated.class);
+            case "halt.patchupdated" -> {
+                HaltEvent.PatchUpdated e = jsonMapper.treeToValue(payloadNode, HaltEvent.PatchUpdated.class);
                 yield String.format("Обновлёна остановка ID=%s",
                         e.id());
             }
