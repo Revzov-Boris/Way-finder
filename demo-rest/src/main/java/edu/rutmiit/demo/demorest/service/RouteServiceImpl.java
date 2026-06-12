@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -20,13 +17,11 @@ import java.util.Comparator;
 public class RouteServiceImpl implements RouteService {
     private final RouteRepository routeRepository;
     private final RouteEventPublisher eventPublisher;
-    private final PlatformTransactionManager transactionManager;
 
     @Autowired
-    public RouteServiceImpl(RouteRepository routeRepository, RouteEventPublisher eventPublisher, PlatformTransactionManager transactionManager) {
+    public RouteServiceImpl(RouteRepository routeRepository, RouteEventPublisher eventPublisher) {
         this.routeRepository = routeRepository;
         this.eventPublisher = eventPublisher;
-        this.transactionManager = transactionManager;
     }
 
     @Override
