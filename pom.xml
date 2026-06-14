@@ -15,6 +15,9 @@
 		<module>demo-rest</module>
 		<module>way-events-contract</module>
 		<module>audit-service</module>
+		<module>grpc-analytics-server</module>
+		<module>ways-grpc-contract</module>
+		<module>grpc-enrichment-client</module>
 	</modules>
 
 </project>

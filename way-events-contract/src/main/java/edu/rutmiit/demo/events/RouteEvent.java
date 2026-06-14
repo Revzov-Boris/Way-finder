@@ -24,4 +24,11 @@ public sealed interface RouteEvent {
             String typeTransport,
             String typeDistance
     ) implements RouteEvent {}
+
+    record Enriched(
+            Long id,
+            Integer timeInWay,
+            Double chanceOfCancellation,
+            Integer difficultyLevel
+    ) implements RouteEvent {}
 }

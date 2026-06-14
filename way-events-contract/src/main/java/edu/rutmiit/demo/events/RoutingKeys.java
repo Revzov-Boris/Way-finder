@@ -14,6 +14,8 @@ public final class RoutingKeys {
     public static final String ROUTE_PATCHUPDATED = "route.patchupdated";
     public static final String ROUTE_DELETED = "route.deleted";
 
+    public static final String ROUTE_ENRICHED = "route.enriched";
+
     // остановки
     public static final String HALT_CREATED = "halt.created";
     public static final String HALT_PATCHUPDATED = "halt.patchupdated";
