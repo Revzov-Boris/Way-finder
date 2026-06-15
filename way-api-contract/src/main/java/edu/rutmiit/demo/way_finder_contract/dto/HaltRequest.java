@@ -1,7 +1,6 @@
 package edu.rutmiit.demo.way_finder_contract.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -16,7 +15,7 @@ public class HaltRequest {
     @NotNull(message = "ID маршрута должен быть")
     @Schema(description = "ID маршрута", example = "1")
     private Long routeId;
-    @NotNull(message = "")
+    @NotNull(message = "Временная зона должна быть")
     @Schema(description = "Время (UTC+3) остановки в этом месте", example = "2026-06-01T20:45:00")
     private LocalDateTime date;
 }
