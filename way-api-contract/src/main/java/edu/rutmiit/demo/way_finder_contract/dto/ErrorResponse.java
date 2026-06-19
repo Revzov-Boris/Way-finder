@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
-
 import java.time.Instant;
 import java.util.List;
 
@@ -55,13 +54,13 @@ public class ErrorResponse extends RepresentationModel<ErrorResponse> {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @Getter
     @Schema(description = "Ошибка валидации поля")
     public static class ValidationError {
         @Schema(description = "Имя невалидного поля", example = "isbn")
         String field;
         @Schema(description = "Значение, которое было отклонено", example = "123")
         Object rejectedValue;
-
         @Schema(description = "Причина отклонения", example = "Некорректный ISBN. Допустимые форматы: ISBN-10 или ISBN-13")
         String message;
     }

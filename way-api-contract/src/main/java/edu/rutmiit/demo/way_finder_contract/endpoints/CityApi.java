@@ -3,6 +3,7 @@ package edu.rutmiit.demo.way_finder_contract.endpoints;
 import edu.rutmiit.demo.way_finder_contract.config.WaysApiContractConfig;
 import edu.rutmiit.demo.way_finder_contract.dto.CityRequest;
 import edu.rutmiit.demo.way_finder_contract.dto.CityResponse;
+import edu.rutmiit.demo.way_finder_contract.dto.PatchCityRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,7 +15,6 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.function.EntityResponse;
 
 @Tag(name = "Cities", description = "Управление городами")
 @RequestMapping(
@@ -56,4 +56,13 @@ public interface CityApi {
     @ApiResponse(responseCode = "409", description = "Такой город уже существует")
     @PostMapping
     ResponseEntity<EntityModel<CityResponse>> createCity(@Valid @RequestBody CityRequest request);
+
+    @Operation(
+            summary = "Частично обновить город",
+            security = @SecurityRequirement(name = WaysApiContractConfig.SECURITY_SCHEME_BEARER)
+    )
+    @ApiResponse(responseCode = "200", description = "Город обновлён")
+    @ApiResponse(responseCode = "400", description = "Ошибка при обновлении города")
+    @PatchMapping("/{id}")
+    EntityModel<CityResponse> patchCity(@Valid @RequestBody PatchCityRequest request, int id);
 }

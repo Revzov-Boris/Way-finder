@@ -4,6 +4,7 @@ import edu.rutmiit.demo.demorest.assemblers.CityAssembler;
 import edu.rutmiit.demo.demorest.service.CityService;
 import edu.rutmiit.demo.way_finder_contract.dto.CityRequest;
 import edu.rutmiit.demo.way_finder_contract.dto.CityResponse;
+import edu.rutmiit.demo.way_finder_contract.dto.PatchCityRequest;
 import edu.rutmiit.demo.way_finder_contract.endpoints.CityApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,5 +54,11 @@ public class CityController implements CityApi {
         return ResponseEntity
                 .created(model.getRequiredLink("self").toUri())
                 .body(model);
+    }
+
+
+    @Override
+    public EntityModel<CityResponse> patchCity(PatchCityRequest request, int id) {
+        return cityAssembler.toModel(cityService.patch(request, id));
     }
 }

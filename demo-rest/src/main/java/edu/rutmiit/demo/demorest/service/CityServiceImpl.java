@@ -5,6 +5,7 @@ import edu.rutmiit.demo.demorest.events.CityEventPublisher;
 import edu.rutmiit.demo.demorest.repositories.CityRepository;
 import edu.rutmiit.demo.way_finder_contract.dto.CityRequest;
 import edu.rutmiit.demo.way_finder_contract.dto.CityResponse;
+import edu.rutmiit.demo.way_finder_contract.dto.PatchCityRequest;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public CityResponse findById(int id) {
-        return toResponse(cityRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Не найдена город с ID=" + id))
-        );
+        return toResponse(getEntityById(id));
     }
 
     @Override
@@ -50,6 +49,30 @@ public class CityServiceImpl implements CityService {
         CityResponse response = toResponse(cityEntity);
         eventPublisher.publishCreated(response);
         return response;
+    }
+
+
+    @Override
+    @Transactional
+    public CityResponse patch(PatchCityRequest request, int id) {
+        CityEntity entity = getEntityById(id);
+        if (request.getName() != null) {
+            entity.setName(request.getName());
+        }
+        if (request.getAddress() != null) {
+            entity.setAddress(request.getAddress());
+        }
+        if (request.getTimeZone() != null) {
+            entity.setTimeZone(request.getTimeZone());
+        }
+        cityRepository.save(entity);
+        return toResponse(entity);
+    }
+
+
+    public CityEntity getEntityById(int id) {
+        return cityRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Не найдена город с ID=" + id));
     }
 
 
