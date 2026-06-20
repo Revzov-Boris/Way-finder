@@ -7,4 +7,11 @@ public sealed interface CityEvent {
             String address,
             Integer timeZone
     ) implements CityEvent{}
+
+    record Patchupdated(
+            Integer id,
+            String name,
+            String address,
+            Integer timeZone
+    ) implements CityEvent{}
 }

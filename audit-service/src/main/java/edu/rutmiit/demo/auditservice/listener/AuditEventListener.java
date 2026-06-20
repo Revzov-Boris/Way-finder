@@ -2,10 +2,7 @@ package edu.rutmiit.demo.auditservice.listener;
 
 import edu.rutmiit.demo.auditservice.models.AuditEntry;
 import edu.rutmiit.demo.auditservice.storage.AuditStorage;
-import edu.rutmiit.demo.events.RouteEvent;
-import edu.rutmiit.demo.events.HaltEvent;
-import edu.rutmiit.demo.events.CityEvent;
-import edu.rutmiit.demo.events.EventMetadata;
+import edu.rutmiit.demo.events.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -87,6 +84,11 @@ public class AuditEventListener {
             case "city.created" -> {
                 CityEvent.Created e = jsonMapper.treeToValue(payloadNode, CityEvent.Created.class);
                 yield String.format("Создан город «%s» (ID: %s), адрес: %s",
+                        e.name(), e.id(), e.address());
+            }
+            case RoutingKeys.CITY_PATCHUPDATED -> {
+                CityEvent.Patchupdated e = jsonMapper.treeToValue(payloadNode, CityEvent.Patchupdated.class);
+                yield String.format("Частично обновлён город «%s» (ID: %s), адрес: %s",
                         e.name(), e.id(), e.address());
             }
             case "halt.created" -> {

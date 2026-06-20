@@ -47,6 +47,7 @@ public class CityServiceImpl implements CityService {
                 .build();
         cityEntity = cityRepository.save(cityEntity);
         CityResponse response = toResponse(cityEntity);
+        cityRepository.flush();
         eventPublisher.publishCreated(response);
         return response;
     }
@@ -66,6 +67,8 @@ public class CityServiceImpl implements CityService {
             entity.setTimeZone(request.getTimeZone());
         }
         cityRepository.save(entity);
+        cityRepository.flush();
+        eventPublisher.publishPatchupdated(toResponse(entity));
         return toResponse(entity);
     }
 

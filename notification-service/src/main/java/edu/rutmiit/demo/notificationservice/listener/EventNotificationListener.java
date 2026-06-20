@@ -1,9 +1,6 @@
 package edu.rutmiit.demo.notificationservice.listener;
 
-import edu.rutmiit.demo.events.CityEvent;
-import edu.rutmiit.demo.events.EventMetadata;
-import edu.rutmiit.demo.events.HaltEvent;
-import edu.rutmiit.demo.events.RouteEvent;
+import edu.rutmiit.demo.events.*;
 import edu.rutmiit.demo.notificationservice.websocket.NotificationWebSocketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +95,7 @@ public class EventNotificationListener {
     private String buildTitle(String eventType) {
         return switch (eventType) {
             case "city.created"         -> "Новый город";
+            case "city.patchupdated"    -> "Город частично обновлён";
             case "halt.created"         -> "Новая остановка";
             case "halt.patchupdated"    -> "Остановка частично обновлена";
             case "route.created"        -> "Новый маршрут";
@@ -117,6 +115,11 @@ public class EventNotificationListener {
                 case "city.created" -> {
                     CityEvent.Created e = jsonMapper.treeToValue(payloadNode, CityEvent.Created.class);
                     yield String.format("Создан город «%s» (ID: %s), адрес: %s",
+                            e.name(), e.id(), e.address());
+                }
+                case RoutingKeys.CITY_PATCHUPDATED -> {
+                    CityEvent.Patchupdated e = jsonMapper.treeToValue(payloadNode, CityEvent.Patchupdated.class);
+                    yield String.format("Частично обновлён город «%s» (ID: %s), адрес: %s",
                             e.name(), e.id(), e.address());
                 }
                 case "halt.created" -> {
@@ -168,6 +171,7 @@ public class EventNotificationListener {
             case "route.deleted"        -> "route-remove";
             case "route.enriched"       -> "analytics";
             case "city.created"         -> "city-plus";
+            case "city.patchupdated"    -> "city-patchedit";
             case "halt.created"         -> "halt-plus";
             case "halt.pathcupdated"    -> "halt-edit";
             default                     -> "bell";
