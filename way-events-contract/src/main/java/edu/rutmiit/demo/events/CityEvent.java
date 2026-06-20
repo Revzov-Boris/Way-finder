@@ -14,4 +14,11 @@ public sealed interface CityEvent {
             String address,
             Integer timeZone
     ) implements CityEvent{}
+
+    record Deleted(
+            Integer id,
+            String name,
+            String address,
+            Integer timeZone
+    ) implements CityEvent{}
 }

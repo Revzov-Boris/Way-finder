@@ -96,6 +96,7 @@ public class EventNotificationListener {
         return switch (eventType) {
             case "city.created"         -> "Новый город";
             case "city.patchupdated"    -> "Город частично обновлён";
+            case "city.deleted"         -> "Город удалён";
             case "halt.created"         -> "Новая остановка";
             case "halt.patchupdated"    -> "Остановка частично обновлена";
             case "route.created"        -> "Новый маршрут";
@@ -120,6 +121,11 @@ public class EventNotificationListener {
                 case RoutingKeys.CITY_PATCHUPDATED -> {
                     CityEvent.Patchupdated e = jsonMapper.treeToValue(payloadNode, CityEvent.Patchupdated.class);
                     yield String.format("Частично обновлён город «%s» (ID: %s), адрес: %s",
+                            e.name(), e.id(), e.address());
+                }
+                case RoutingKeys.CITY_DELETED -> {
+                    CityEvent.Deleted e = jsonMapper.treeToValue(payloadNode, CityEvent.Deleted.class);
+                    yield String.format("Удалён обновлён город «%s» (ID: %s), адрес: %s",
                             e.name(), e.id(), e.address());
                 }
                 case "halt.created" -> {
@@ -166,12 +172,13 @@ public class EventNotificationListener {
     private String resolveIcon(String eventType) {
         return switch (eventType) {
             case "route.created"        -> "route-plus";
-            case "route.updated"        -> "rout-edit";
+            case "route.updated"        -> "route-edit";
             case "route.patchupdated"   -> "route-patchedit";
             case "route.deleted"        -> "route-remove";
             case "route.enriched"       -> "analytics";
             case "city.created"         -> "city-plus";
             case "city.patchupdated"    -> "city-patchedit";
+            case "city.deleted"         -> "city-remove";
             case "halt.created"         -> "halt-plus";
             case "halt.pathcupdated"    -> "halt-edit";
             default                     -> "bell";
@@ -182,9 +189,9 @@ public class EventNotificationListener {
 
     private String resolveLevel(String eventType) {
         return switch (eventType) {
-            case "route.deleted" -> "warning";
-            case "route.enriched"                  -> "info";
-            default                                -> "success";
+            case "route.deleted", "city.deleted"        -> "warning";
+            case "route.enriched"                       -> "info";
+            default                                     -> "success";
         };
     }
 

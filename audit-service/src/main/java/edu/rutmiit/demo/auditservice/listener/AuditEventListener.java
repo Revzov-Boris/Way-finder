@@ -91,6 +91,11 @@ public class AuditEventListener {
                 yield String.format("Частично обновлён город «%s» (ID: %s), адрес: %s",
                         e.name(), e.id(), e.address());
             }
+            case RoutingKeys.CITY_DELETED -> {
+                CityEvent.Deleted e = jsonMapper.treeToValue(payloadNode, CityEvent.Deleted.class);
+                yield String.format("Удалён город «%s» (ID: %s), адрес: %s",
+                        e.name(), e.id(), e.address());
+            }
             case "halt.created" -> {
                 HaltEvent.Created e = jsonMapper.treeToValue(payloadNode, HaltEvent.Created.class);
                 yield String.format("Создана остановка с ID=%s (на маршруте %s на время %s)",

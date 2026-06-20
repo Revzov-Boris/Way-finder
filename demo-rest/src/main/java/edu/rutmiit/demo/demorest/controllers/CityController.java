@@ -61,4 +61,10 @@ public class CityController implements CityApi {
     public EntityModel<CityResponse> patchCity(PatchCityRequest request, int id) {
         return cityAssembler.toModel(cityService.patch(request, id));
     }
+
+
+    @Override
+    public EntityModel<CityResponse> deleteCity(int id) {
+        return cityAssembler.toModel(cityService.delete(id));
+    }
 }

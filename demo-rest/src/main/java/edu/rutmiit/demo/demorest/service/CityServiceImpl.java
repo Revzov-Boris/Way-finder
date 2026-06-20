@@ -73,6 +73,18 @@ public class CityServiceImpl implements CityService {
     }
 
 
+    @Override
+    @Transactional
+    public CityResponse delete(int id) {
+        CityEntity entity = getEntityById(id);
+        CityResponse response = toResponse(entity);
+        cityRepository.deleteById(entity.getId());
+        cityRepository.flush();
+        eventPublisher.publishDeleted(response);
+        return response;
+    }
+
+
     public CityEntity getEntityById(int id) {
         return cityRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Не найдена город с ID=" + id));

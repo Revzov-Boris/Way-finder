@@ -57,6 +57,7 @@ public interface CityApi {
     @PostMapping
     ResponseEntity<EntityModel<CityResponse>> createCity(@Valid @RequestBody CityRequest request);
 
+
     @Operation(
             summary = "Частично обновить город",
             security = @SecurityRequirement(name = WaysApiContractConfig.SECURITY_SCHEME_BEARER)
@@ -65,4 +66,15 @@ public interface CityApi {
     @ApiResponse(responseCode = "400", description = "Ошибка при обновлении города")
     @PatchMapping("/{id}")
     EntityModel<CityResponse> patchCity(@Valid @RequestBody PatchCityRequest request, int id);
+
+
+    @Operation(
+            summary = "Удалить город",
+            security = @SecurityRequirement(name = WaysApiContractConfig.SECURITY_SCHEME_BEARER),
+            description = "Удаляет город, если нет ни одной остановки в нём"
+    )
+    @ApiResponse(responseCode = "200", description = "Город удалён")
+    @ApiResponse(responseCode = "400", description = "Ошибка при удалении города")
+    @DeleteMapping("/{id}")
+    EntityModel<CityResponse> deleteCity(int id);
 }

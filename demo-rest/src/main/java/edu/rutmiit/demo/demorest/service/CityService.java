@@ -11,4 +11,5 @@ public interface CityService {
     CityResponse findById(int id);
     CityResponse create(CityRequest cityRequest);
     CityResponse patch(PatchCityRequest request, int id);
+    CityResponse delete(int id);
 }

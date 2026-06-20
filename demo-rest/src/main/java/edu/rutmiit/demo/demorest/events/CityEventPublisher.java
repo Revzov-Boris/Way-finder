@@ -48,6 +48,17 @@ public class CityEventPublisher {
     }
 
 
+    public void publishDeleted(CityResponse city) {
+        var event = new CityEvent.Created(
+                city.getId(),
+                city.getName(),
+                city.getAddress(),
+                city.getTimeZone()
+        );
+        send(RoutingKeys.CITY_DELETED, event);
+    }
+
+
     private void send(String routingKey, CityEvent event) {
         try {
             EventEnvelope<CityEvent> envelope = EventEnvelope.wrap(event, SOURCE, routingKey);

@@ -8,6 +8,7 @@ public final class RoutingKeys {
     // города
     public static final String CITY_CREATED = "city.created";
     public static final String CITY_PATCHUPDATED = "city.patchupdated";
+    public static final String CITY_DELETED = "city.deleted";
 
     // маршруты
     public static final String ROUTE_CREATED = "route.created";
