@@ -21,6 +21,7 @@ public final class RoutingKeys {
     // остановки
     public static final String HALT_CREATED = "halt.created";
     public static final String HALT_PATCHUPDATED = "halt.patchupdated";
+    public static final String HALT_DELETED = "halt.deleted";
 
     // паттерны
     public static final String ALL_CITY_EVENTS = "city.*";

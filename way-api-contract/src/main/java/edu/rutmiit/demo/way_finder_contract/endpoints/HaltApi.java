@@ -66,7 +66,18 @@ public interface HaltApi {
     @ApiResponse(responseCode = "400", description = "Ошибка при обновлении остановки")
     @PatchMapping("/{id}")
     EntityModel<HaltResponse> patchHalt(@Valid @RequestBody PatchHaltRequest request,
-                                        @Parameter(description = "ID маршрута", required = true, example = "1")
+                                        @Parameter(description = "ID остановки", required = true, example = "1")
                                         @PathVariable long id);
+
+    @Operation(
+            summary = "Удалить остановку",
+            security = @SecurityRequirement(name = WaysApiContractConfig.SECURITY_SCHEME_BEARER),
+            description = "Удаляет остановку"
+    )
+    @ApiResponse(responseCode = "200", description = "Остановка удалена")
+    @ApiResponse(responseCode = "400", description = "Ошибка при удалении остановки")
+    @DeleteMapping("/{id}")
+    EntityModel<HaltResponse> deleteHalt(@Parameter(description = "ID остановки", required = true, example = "1")
+                                         @PathVariable long id);
 
 }

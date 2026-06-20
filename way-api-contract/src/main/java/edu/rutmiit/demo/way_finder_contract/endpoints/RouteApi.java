@@ -104,10 +104,11 @@ public interface RouteApi {
 
     @Operation(
             summary = "Удалить маршрут",
-            security = @SecurityRequirement(name = WaysApiContractConfig.SECURITY_SCHEME_BEARER)
+            security = @SecurityRequirement(name = WaysApiContractConfig.SECURITY_SCHEME_BEARER),
+            description = "Удаляет маршрут, если в нём нет ни одной остановки"
     )
     @ApiResponse(responseCode = "200", description = "Маршрут удалён")
-    @ApiResponse(responseCode = "404", description = "Маршрут не найдена",
+    @ApiResponse(responseCode = "404", description = "Ошибка при удалении маршрута",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @DeleteMapping("/{id}")
     EntityModel<RouteResponse> deleteRoute(

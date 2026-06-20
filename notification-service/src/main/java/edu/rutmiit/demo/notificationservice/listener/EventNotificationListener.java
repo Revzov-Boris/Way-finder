@@ -94,16 +94,17 @@ public class EventNotificationListener {
 
     private String buildTitle(String eventType) {
         return switch (eventType) {
-            case "city.created"         -> "Новый город";
-            case "city.patchupdated"    -> "Город частично обновлён";
-            case "city.deleted"         -> "Город удалён";
-            case "halt.created"         -> "Новая остановка";
-            case "halt.patchupdated"    -> "Остановка частично обновлена";
-            case "route.created"        -> "Новый маршрут";
-            case "route.patchupdated"   -> "Маршрут частично обновлён";
-            case "route.deleted"        -> "Маршрут удалён";
-            case "route.updated"        -> "Маршрут обновлён";
-            case "route.enriched"       -> "Маршрут проанализирован";
+            case "city.created"             -> "Новый город";
+            case "city.patchupdated"        -> "Город частично обновлён";
+            case "city.deleted"             -> "Город удалён";
+            case "halt.created"             -> "Новая остановка";
+            case "halt.patchupdated"        -> "Остановка частично обновлена";
+            case RoutingKeys.HALT_DELETED   -> "Остановка удалена";
+            case "route.created"            -> "Новый маршрут";
+            case "route.patchupdated"       -> "Маршрут частично обновлён";
+            case "route.deleted"            -> "Маршрут удалён";
+            case "route.updated"            -> "Маршрут обновлён";
+            case "route.enriched"           -> "Маршрут проанализирован";
             default                     -> "Событие: " + eventType;
         };
     }
@@ -136,6 +137,11 @@ public class EventNotificationListener {
                 case "halt.patchupdated" -> {
                     HaltEvent.PatchUpdated e = jsonMapper.treeToValue(payloadNode, HaltEvent.PatchUpdated.class);
                     yield String.format("Обновлёна остановка ID=%s",
+                            e.id());
+                }
+                case RoutingKeys.HALT_DELETED -> {
+                    HaltEvent.Deleted e = jsonMapper.treeToValue(payloadNode, HaltEvent.Deleted.class);
+                    yield String.format("Удалена остановка ID=%s",
                             e.id());
                 }
                 case "route.created" -> {
@@ -171,17 +177,18 @@ public class EventNotificationListener {
 
     private String resolveIcon(String eventType) {
         return switch (eventType) {
-            case "route.created"        -> "route-plus";
-            case "route.updated"        -> "route-edit";
-            case "route.patchupdated"   -> "route-patchedit";
-            case "route.deleted"        -> "route-remove";
-            case "route.enriched"       -> "analytics";
-            case "city.created"         -> "city-plus";
-            case "city.patchupdated"    -> "city-patchedit";
-            case "city.deleted"         -> "city-remove";
-            case "halt.created"         -> "halt-plus";
-            case "halt.pathcupdated"    -> "halt-edit";
-            default                     -> "bell";
+            case "route.created"                -> "route-plus";
+            case "route.updated"                -> "route-edit";
+            case "route.patchupdated"           -> "route-patchedit";
+            case "route.deleted"                -> "route-remove";
+            case "route.enriched"               -> "analytics";
+            case "city.created"                 -> "city-plus";
+            case "city.patchupdated"            -> "city-patchedit";
+            case "city.deleted"                 -> "city-remove";
+            case "halt.created"                 -> "halt-plus";
+            case "halt.patchupdated"            -> "halt-edit";
+            case RoutingKeys.HALT_DELETED       -> "halt-remove";
+            default                             -> "bell";
         };
     }
 

@@ -16,4 +16,11 @@ public sealed interface HaltEvent {
             Long routeId,
             LocalDateTime date
     ) implements HaltEvent {}
+
+    record Deleted(
+            Long id,
+            Integer cityId,
+            Long routeId,
+            LocalDateTime date
+    ) implements HaltEvent {}
 }

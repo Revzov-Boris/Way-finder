@@ -60,4 +60,10 @@ public class HaltController implements HaltApi {
     public EntityModel<HaltResponse> patchHalt(PatchHaltRequest request, long id) {
         return haltAssembler.toModel(haltService.patch(request, id));
     }
+
+
+    @Override
+    public EntityModel<HaltResponse> deleteHalt(long id) {
+        return haltAssembler.toModel(haltService.delete(id));
+    }
 }

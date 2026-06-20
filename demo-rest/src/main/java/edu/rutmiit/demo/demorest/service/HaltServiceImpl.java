@@ -30,16 +30,25 @@ public class HaltServiceImpl implements HaltService {
         this.eventPublisher = eventPublisher;
     }
 
+
     @Override
     public Page<HaltResponse> findAll(Pageable pageable) {
         return haltRepository.findAll(pageable).map(e -> toResponse(e));
     }
+
 
     @Override
     public HaltResponse findById(long id) {
         HaltEntity haltEntity = getEntity(id);
         return toResponse(haltEntity);
     }
+
+
+    @Override
+    public Page<HaltResponse> findAllByRoute(Pageable pageable, long routeId) {
+        return haltRepository.findByRouteId(routeId, pageable).map(e -> toResponse(e));
+    }
+
 
     @Override
     @Transactional
@@ -57,6 +66,7 @@ public class HaltServiceImpl implements HaltService {
                 .build();
         entity = haltRepository.save(entity);
         HaltResponse response = toResponse(entity);
+        haltRepository.flush();
         eventPublisher.publishCreated(response);
         return response;
     }
@@ -85,8 +95,22 @@ public class HaltServiceImpl implements HaltService {
         if (request.getDate() != null) {
             entity.setTime(request.getDate());
         }
+        haltRepository.save(entity);
+        haltRepository.flush();
         HaltResponse response = toResponse(entity);
         eventPublisher.publishPatchupdated(response);
+        return response;
+    }
+
+
+    @Override
+    @Transactional
+    public HaltResponse delete(long id) {
+        HaltEntity entity = getEntity(id);
+        HaltResponse response = toResponse(entity);
+        haltRepository.deleteById(entity.getId());
+        haltRepository.flush();
+        eventPublisher.publishDeleted(response);
         return response;
     }
 
@@ -95,12 +119,6 @@ public class HaltServiceImpl implements HaltService {
         return haltRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Нет остановки с ID=" + id)
         );
-    }
-
-
-    @Override
-    public Page<HaltResponse> findAllByRoute(Pageable pageable, long routeId) {
-        return haltRepository.findByRouteId(routeId, pageable).map(e -> toResponse(e));
     }
 
 

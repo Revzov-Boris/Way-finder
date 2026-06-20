@@ -42,6 +42,17 @@ public class HaltEventPublisher {
     }
 
 
+    public void publishDeleted(HaltResponse halt) {
+        var event = new HaltEvent.PatchUpdated(
+                halt.getId(),
+                halt.getCityId(),
+                halt.getRouteId(),
+                halt.getDate()
+        );
+        send(RoutingKeys.HALT_DELETED, event);
+    }
+
+
     private void send(String routingKey, HaltEvent event) {
         try {
             EventEnvelope<HaltEvent> envelope = EventEnvelope.wrap(event, SOURCE, routingKey);
