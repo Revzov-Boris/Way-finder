@@ -10,10 +10,11 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Schema(description = "Запрос на создание маршрута")
 public class RouteRequest {
     @Schema(description = "Вид транспорта, на котором происходит передвижение", example = "Автобус")

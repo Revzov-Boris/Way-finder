@@ -1,3 +1,4 @@
+scalar LocalDateTime
 scalar DateTime
 scalar Date
 
@@ -20,7 +21,7 @@ type Route {
 
 type Halt {
     id: ID!
-    date: DateTime
+    date: LocalDateTime
     city: City!
     route: Route!
 }
@@ -92,6 +93,20 @@ input CreateCity {
 }
 
 
+input CreateRoute {
+    typeTransport: String!
+    typeDistance: String!
+    halts: [HaltInRoute!]
+}
+
+
+input HaltInRoute {
+    cityId: Int!
+    date: LocalDateTime!
+}
+
+
 type Mutation {
     createCity(input: CreateCity!): City
+    createRoute(input: CreateRoute!): Route
 }
