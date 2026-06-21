@@ -1,11 +1,18 @@
 package edu.rutmiit.demo.grpcanalytics.service;
 
 import edu.rutmiit.demo.grpc.AnalyzeRouteRequest;
+import edu.rutmiit.demo.grpc.HaltInfo;
 import edu.rutmiit.demo.grpc.RouteAnalysisResponse;
 import edu.rutmiit.demo.grpc.RouteAnalyticsGrpc;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class RouteAnalyticsServiceImpl extends RouteAnalyticsGrpc.RouteAnalyticsImplBase {
     private static final Logger log = LoggerFactory.getLogger(RouteAnalyticsServiceImpl.class);
@@ -54,24 +61,36 @@ public class RouteAnalyticsServiceImpl extends RouteAnalyticsGrpc.RouteAnalytics
     // ─── Демонстрационная бизнес-логика ──────────────────────────────
 
     /**
-     * Оценка времени чтения на основе жанра.
-     * В реальном приложении — ML-модель или API внешнего сервиса.
+     * Вычисление времени в пути.
      */
     private int estimateWayTime(AnalyzeRouteRequest request) {
-        int base = switch (request.getTypeDistance() != null ? request.getTypeDistance() : "") {
-            case "пригородный"       ->  60;
-            case "междугородний"     -> 130;
-            case "международный"     -> 500;
-            default                  ->  90;
-        };
-
-        return base;
+        int minutes = 90;
+        if (request.getHaltsList().isEmpty() || request.getHaltsList().size() < 2) {
+            minutes = switch (request.getTypeDistance() != null ? request.getTypeDistance() : "") {
+                case "пригородный"       ->  60;
+                case "междугородний"     -> 130;
+                case "международный"     -> 500;
+                default                  ->  90;
+            };
+        } else {
+            DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            List<HaltInfo> sortHalt = new ArrayList<>(request.getHaltsList());
+            sortHalt.sort((h1, h2) -> {
+                LocalDateTime t1 = LocalDateTime.parse(h1.getDate(), dateFormat);
+                LocalDateTime t2 = LocalDateTime.parse(h2.getDate(), dateFormat);
+                return t1.compareTo(t2);
+            });
+            LocalDateTime t1 = LocalDateTime.parse(sortHalt.getFirst().getDate(), dateFormat);
+            LocalDateTime t2 = LocalDateTime.parse(sortHalt.getLast().getDate(), dateFormat);
+            int secunds = (int) t1.until(t2, ChronoUnit.SECONDS);
+            minutes = secunds / 60;
+        }
+        return minutes;
     }
 
 
     /**
-     * Рекомендательный балл (0.0—10.0).
-     * Демонстрационная формула: классика получает высокий балл.
+     * Уровень сложности маршрута балл (0—10).
      */
     private double calculateChanceOfCancellation(AnalyzeRouteRequest request) {
         double change = switch (request.getTypeDistance() != null ? request.getTypeDistance() : "") {
@@ -87,10 +106,45 @@ public class RouteAnalyticsServiceImpl extends RouteAnalyticsGrpc.RouteAnalytics
      * Классификация эпохи по году публикации.
      */
     private int difLevel(AnalyzeRouteRequest request) {
-        if (request.getTypeTransport().equals("автобус")) return 10;
-        if (request.getTypeTransport().equals("поезд")) return 2;
-        if (request.getTypeTransport().equals("самолёт")) return 6;
-        if (request.getTypeTransport().equals("корабль")) return 8;
-        return 5;
+        if (request.getHaltsList().isEmpty() || request.getHaltsList().size() < 2) {
+            if (request.getTypeTransport().toLowerCase().contains("автобус")) return 9;
+            if (request.getTypeTransport().toLowerCase().contains("поезд")) return 2;
+            if (request.getTypeTransport().toLowerCase().contains("самолёт")) return 6;
+            if (request.getTypeTransport().toLowerCase().contains("корабль")) return 10;
+            return 5;
+        } else {
+            double level;
+            int minutes = estimateWayTime(request);
+            if (minutes <= 20) {
+                level = 0;
+            } else if (minutes <= 60) {
+                level = 2;
+            } else if (minutes < 120) {
+                level = 3;
+            } else if (minutes < 360) {
+                level = 5;
+            } else if (minutes < 720) {
+                level = 7;
+            } else {
+                level = 8;
+            }
+            if (request.getTypeTransport().toLowerCase().contains("автобус")) {
+                level *= 2;
+            }
+            else if (request.getTypeTransport().toLowerCase().contains("поезд")) {
+                level *= 1;
+            }
+            if (request.getTypeTransport().toLowerCase().contains("самолёт")) {
+                level += 0.5;
+                level *= 1.5;
+            }
+            if (request.getTypeTransport().toLowerCase().contains("корабль")) {
+                level *= 2;
+            }
+            int intLevel = (int) Math.round(level);
+            if (intLevel > 10)
+                intLevel = 10;
+            return intLevel;
+        }
     }
 }

@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.hateoas.RepresentationModel;
-
 import java.time.LocalDateTime;
 
 @Getter

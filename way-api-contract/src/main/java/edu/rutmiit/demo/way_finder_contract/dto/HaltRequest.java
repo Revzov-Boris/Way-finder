@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@Schema(description = "Запрос на создание остановки")
 public class HaltRequest {
     @NotNull(message = "ID города должен быть")
     @Schema(description = "ID города, в котором находится остановка", example = "1")

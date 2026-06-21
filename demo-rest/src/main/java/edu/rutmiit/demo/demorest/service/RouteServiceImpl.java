@@ -1,7 +1,11 @@
 package edu.rutmiit.demo.demorest.service;
 
+import edu.rutmiit.demo.demorest.entities.CityEntity;
+import edu.rutmiit.demo.demorest.entities.HaltEntity;
 import edu.rutmiit.demo.demorest.entities.RouteEntity;
 import edu.rutmiit.demo.demorest.events.RouteEventPublisher;
+import edu.rutmiit.demo.demorest.repositories.CityRepository;
+import edu.rutmiit.demo.demorest.repositories.HaltRepository;
 import edu.rutmiit.demo.demorest.repositories.RouteRepository;
 import edu.rutmiit.demo.way_finder_contract.dto.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -12,15 +16,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RouteServiceImpl implements RouteService {
     private final RouteRepository routeRepository;
+    private final CityRepository cityRepository;
+    private final HaltRepository haltRepository;
     private final RouteEventPublisher eventPublisher;
 
     @Autowired
-    public RouteServiceImpl(RouteRepository routeRepository, RouteEventPublisher eventPublisher) {
+    public RouteServiceImpl(RouteRepository routeRepository, CityRepository cityRepository, HaltRepository haltRepository, RouteEventPublisher eventPublisher) {
         this.routeRepository = routeRepository;
+        this.cityRepository = cityRepository;
+        this.haltRepository = haltRepository;
         this.eventPublisher = eventPublisher;
     }
 
@@ -42,8 +52,23 @@ public class RouteServiceImpl implements RouteService {
                 .typeTransport(routeRequest.getTypeTransport())
                 .typeDistance(routeRequest.getTypeDistance())
                 .build();
-        routeEntity = routeRepository.save(routeEntity);
-        RouteResponse response = toResponse(routeEntity);
+        RouteEntity savedRouteEntity = routeRepository.save(routeEntity);
+        // если есть остановки
+        if (routeRequest.getHalts() != null && !routeRequest.getHalts().isEmpty()) {
+            List<HaltEntity> haltsList = routeRequest.getHalts().stream()
+                    .map(r -> HaltEntity.builder()
+                            .city(cityRepository.findById(r.getCityId())
+                                    .orElseThrow(() -> new EntityNotFoundException("Город с ID = " + r.getCityId() + " не найден")))
+                            .route(savedRouteEntity)
+                            .time(r.getDate())
+                            .build()
+                    ).collect(Collectors.toList());
+            haltRepository.saveAll(haltsList);
+            savedRouteEntity.setHalts(haltsList);
+        }
+        routeRepository.save(savedRouteEntity);
+        routeRepository.flush();
+        RouteResponse response = toResponse(savedRouteEntity);
         eventPublisher.publishCreated(response);
         return response;
     }

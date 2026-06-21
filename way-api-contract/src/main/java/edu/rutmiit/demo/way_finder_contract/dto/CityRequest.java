@@ -12,6 +12,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@Schema(description = "Запрос на создание города")
 public class CityRequest {
     @Schema(description = "Название населённого пункта", example = "Керчь")
     @NotBlank(message = "Название должно быть")

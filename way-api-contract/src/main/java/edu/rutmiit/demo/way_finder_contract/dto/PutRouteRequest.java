@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
+@Schema(description = "Запрос на полное обновление маршрута")
 public class PutRouteRequest {
         @Schema(description = "Вид транспорта, на котором происходит передвижение", example = "Автобус")
         @NotBlank(message = "Тип транспорта не может быть пустым")

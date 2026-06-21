@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
+@Schema(description = "Запрос на частичное обновление маршрута")
 public class PatchRouteRequest {
         @Schema(description = "Вид транспорта, на котором происходит передвижение", example = "Автобус")
         @Size(min = 2, max = 50, message = "Тип должен содержать от 2 до 50 символов включительно")

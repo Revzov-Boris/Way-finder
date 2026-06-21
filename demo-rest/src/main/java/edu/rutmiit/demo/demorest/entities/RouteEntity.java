@@ -19,6 +19,6 @@ public class RouteEntity {
     private Long id;
     private String typeTransport;
     private String typeDistance;
-    @OneToMany(mappedBy = "route")
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL)
     private List<HaltEntity> halts;
 }

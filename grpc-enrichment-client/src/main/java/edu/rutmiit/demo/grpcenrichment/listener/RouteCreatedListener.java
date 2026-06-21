@@ -1,5 +1,6 @@
 package edu.rutmiit.demo.grpcenrichment.listener;
 
+import edu.rutmiit.demo.grpc.HaltInfo;
 import org.springframework.stereotype.Component;
 import edu.rutmiit.demo.events.RouteEvent;
 import edu.rutmiit.demo.events.EventMetadata;
@@ -13,6 +14,10 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
+
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Component
@@ -55,7 +60,21 @@ public class RouteCreatedListener {
                     routeCreated.id(), routeCreated.typeTransport(), metadata.eventId());
 
             // 2. Формируем gRPC-запрос
+            DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            List<HaltInfo> halts = new ArrayList<>();
+            if (routeCreated.haltInfos() != null) {
+                for (RouteEvent.HaltInfo h : routeCreated.haltInfos()) {
+                    String strDate = h.date().format(dateFormat);
+                    HaltInfo halt = HaltInfo.newBuilder()
+                            .setDate(strDate)
+                            .setHaltId(h.id())
+                            .setCityId(h.cityId())
+                            .build();
+                    halts.add(halt);
+                }
+            }
             AnalyzeRouteRequest grpcRequest = AnalyzeRouteRequest.newBuilder()
+                    .addAllHalts(halts)
                     .setRouteId(routeCreated.id())
                     .setTypeTransport(routeCreated.typeTransport())
                     .setTypeDistance(routeCreated.typeDistance())

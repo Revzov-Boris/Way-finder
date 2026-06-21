@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@Schema(description = "Запрос на создание остановки")
 public class PatchHaltRequest {
     @Schema(description = "ID города, в котором находится остановка", example = "1")
     private Integer cityId;
