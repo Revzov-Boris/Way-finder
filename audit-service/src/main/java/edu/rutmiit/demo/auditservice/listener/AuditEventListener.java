@@ -128,6 +128,11 @@ public class AuditEventListener {
                 RouteEvent.Deleted e = jsonMapper.treeToValue(payloadNode, RouteEvent.Deleted.class);
                 yield String.format("Удалён маршрут ID=%d", e.id());
             }
+            case "route.enriched" -> {
+                RouteEvent.Enriched e = jsonMapper.treeToValue(payloadNode, RouteEvent.Enriched.class);
+                yield String.format("Проанализирован маршрут ID=%d: время в пути = %s мин, шанс отмены рейса = %s, сложность=%s/10",
+                        e.id(), e.timeInWay(), e.chanceOfCancellation(), e.difficultyLevel());
+            }
             default -> "Неизвестное событие: " + eventType;
         };
     }
