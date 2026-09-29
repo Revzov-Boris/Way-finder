@@ -27,6 +27,7 @@ public class RouteRequest {
     private String typeDistance;
     @Valid
     @Schema(description = "Остановки этого маршрута")
+    @Size(min = 2, message = "В маршруте должны быть минимум 2 остановки: начальная и конечная")
     private List<HaltInRoute> halts;
 
 
