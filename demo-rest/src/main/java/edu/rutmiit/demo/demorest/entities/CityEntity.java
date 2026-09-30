@@ -18,4 +18,5 @@ public class CityEntity {
     @Column(unique = true)
     private String address;
     private int timeZone;
+    private Integer countCitizen;
 }

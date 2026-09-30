@@ -18,6 +18,6 @@ CREATE TABLE halts (
     time      TIMESTAMP
 );
 
-CREATE INDEX idx_halts_city_id ON halsts(city_id);
-CREATE INDEX idx_halts_city_id ON halsts(route_id);
+CREATE INDEX idx_halts_city_id ON halts(city_id);
+CREATE INDEX idx_halts_route_id ON halts(route_id);
 
