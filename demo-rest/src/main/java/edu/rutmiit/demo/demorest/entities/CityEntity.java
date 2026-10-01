@@ -3,6 +3,8 @@ package edu.rutmiit.demo.demorest.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,4 +21,6 @@ public class CityEntity {
     private String address;
     private int timeZone;
     private Integer countCitizen;
+    @Column(nullable = false)
+    private LocalDateTime created_at;
 }
